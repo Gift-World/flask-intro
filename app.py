@@ -1,6 +1,7 @@
-from flask import Flask
+from flask import Flask,make_response
 from flask_migrate import Migrate
-from models import db
+from models import db,User
+
 
 # create flask application object
 app = Flask(__name__)
@@ -30,6 +31,14 @@ def index():
 @app.route('/users/<username>')
 def get_username(username):
     return f"Hello, {username}"
+
+@app.route("/users")
+def get_users():
+    users = [{"id": User.id,"username":User.username,"age":User.age } for User in User.query.all()]
+    # print(users)
+    # return users
+    # response = make_response(jsonify([user.to_dict() for user in users]), 200)
+    return make_response (users,200)
 
 if  __name__ == '__main__':
     app.run(port= 5500 , debug= True)
